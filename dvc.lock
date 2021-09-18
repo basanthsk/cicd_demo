@@ -1,0 +1,60 @@
+schema: '2.0'
+stages:
+  load_data:
+    cmd: python src/load_data.py --config=params.yaml
+    deps:
+    - path: data_given/diabetes.csv
+      md5: b43dd020fa775d93fced49f959c227ed
+      size: 23873
+    - path: src/get_data.py
+      md5: 042960dc1348ca2d0cd9a5315a81777a
+      size: 727
+    - path: src/load_data.py
+      md5: c6b5aec78094241339dbdf4e66eea25e
+      size: 547
+    outs:
+    - path: data/raw/diabetes.csv
+      md5: 60acca81995dc9744b499005ecfe6f2a
+      size: 24059
+  split_data:
+    cmd: python src/split_data.py --config=params.yaml
+    deps:
+    - path: data/raw/diabetes.csv
+      md5: 60acca81995dc9744b499005ecfe6f2a
+      size: 24059
+    - path: src/split_data.py
+      md5: ae6b5ded3cc77bc918423f3808b6c4e2
+      size: 914
+    outs:
+    - path: data/processed/test_diabetes.csv
+      md5: 5aaa75439a81b8e5e974a569daba13a2
+      size: 4873
+    - path: data/processed/train_diabetes.csv
+      md5: d7b2c68a46e9e89f7ae9e5deeaf89fab
+      size: 19284
+  train_and_evaluate:
+    cmd: python src/train_and_evaluate.py --config=params.yaml
+    deps:
+    - path: data/processed/test_diabetes.csv
+      md5: 5aaa75439a81b8e5e974a569daba13a2
+      size: 4873
+    - path: data/processed/train_diabetes.csv
+      md5: d7b2c68a46e9e89f7ae9e5deeaf89fab
+      size: 19284
+    - path: src/train_and_evaluate.py
+      md5: 5a56345991543e41236a0a178784610d
+      size: 2190
+    params:
+      params.yaml:
+        estimators.ElasticNet.params.alpha: 0.9
+        estimators.ElasticNet.params.l1_ratio: 0.4
+    outs:
+    - path: reports/params.json
+      md5: a4aab0167612f21a6085dd05cfafdbf6
+      size: 44
+    - path: reports/scores.json
+      md5: a4c1ca996c3b7d54c7b34f924f746132
+      size: 101
+    - path: saved_models/model.joblib
+      md5: f7b7254db5a64e6a5ce8e216503f5fdb
+      size: 706

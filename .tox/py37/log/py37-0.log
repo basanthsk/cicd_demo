@@ -1,0 +1,14 @@
+action: py37, msg: getenv
+cwd: F:\ineuron\DVC\daibetic_2\.tox
+cmd: 'C:\Users\Zaban\.virtualenvs\daibetic_2-_bVy6nnm\Scripts\python.exe' -m pipenv --python 'C:\Users\Zaban\.virtualenvs\daibetic_2-_bVy6nnm\Scripts\python.exe'
+Creating a virtualenv for this project...
+Pipfile: F:\ineuron\DVC\daibetic_2\.tox\py37\Pipfile
+Using c:/users/zaban/.virtualenvs/daibetic_2-_bvy6nnm/scripts/python.exe (3.7.9) to create virtualenv...
+[    ] Creating virtual environment...[=   ] Creating virtual environment...[==  ] Creating virtual environment...[=== ] Creating virtual environment...[ ===] Creating virtual environment...[  ==] Creating virtual environment...[   =] Creating virtual environment...[    ] Creating virtual environment...[   =] Creating virtual environment...[  ==] Creating virtual environment...[ ===] Creating virtual environment...[====] Creating virtual environment...[=== ] Creating virtual environment...[==  ] Creating virtual environment...[=   ] Creating virtual environment...[    ] Creating virtual environment...[=   ] Creating virtual environment...[==  ] Creating virtual environment...[=== ] Creating virtual environment...[ ===] Creating virtual environment...[  ==] Creating virtual environment...created virtual environment CPython3.7.9.final.0-32 in 1256ms
+  creator CPython3Windows(dest=F:\ineuron\DVC\daibetic_2\.tox\py37\.venv, clear=False, no_vcs_ignore=False, global=False)
+  seeder FromAppData(download=False, pip=bundle, setuptools=bundle, wheel=bundle, via=copy, app_data_dir=C:\Users\Zaban\AppData\Local\pypa\virtualenv)
+    added seed packages: pip==21.2.4, setuptools==57.4.0, wheel==0.37.0
+  activators BashActivator,BatchActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
+
+Successfully created virtual environment! 
+Virtualenv location: F:\ineuron\DVC\daibetic_2\.tox\py37\.venv

@@ -1,0 +1,7 @@
+flake8
+dvc 
+dvc[gdrive]
+sklearn
+pandas
+pytest
+tox

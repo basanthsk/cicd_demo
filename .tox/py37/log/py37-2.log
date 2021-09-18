@@ -1,0 +1,16 @@
+action: py37, msg: installpkg
+cwd: F:\ineuron\DVC\daibetic_2
+cmd: 'C:\Users\Zaban\.virtualenvs\daibetic_2-_bVy6nnm\Scripts\python.EXE' -m pip install --exists-action w '.tox\.tmp\package\1\src-0.0.1.zip'
+Processing f:\ineuron\dvc\daibetic_2\.tox\.tmp\package\1\src-0.0.1.zip
+Building wheels for collected packages: src
+  Building wheel for src (setup.py): started
+  Building wheel for src (setup.py): finished with status 'done'
+  Created wheel for src: filename=src-0.0.1-py3-none-any.whl size=4101 sha256=fe9847f2de7c11abd4114681b86ecfe4caf9c0344928af3bdbea6928f00c02f9
+  Stored in directory: c:\users\zaban\appdata\local\pip\cache\wheels\34\01\0d\3b1453e757b5ab136fca6a98d02a474d4bd908e8d02b65d427
+Successfully built src
+Installing collected packages: src
+  Attempting uninstall: src
+    Found existing installation: src 0.0.1
+    Uninstalling src-0.0.1:
+      Successfully uninstalled src-0.0.1
+Successfully installed src-0.0.1
