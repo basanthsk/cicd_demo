@@ -32,12 +32,13 @@ def eval_metrics(actual, pred):
 
 def train_and_eval(config_path):
     config = read_params(config_path)
-    x_train_path = config["pre_proccess"]["x_train_path"]
-    y_train_path = config["pre_proccess"]["y_train_path"]
-    x_test_path = config["pre_proccess"]["x_test_path"]
-    y_test_path = config["pre_proccess"]["y_test_path"]
+    x_train_path = config["pre_process"]["x_train_path"]
+    y_train_path = config["pre_process"]["y_train_path"]
+    x_test_path = config["pre_process"]["x_test_path"]
+    y_test_path = config["pre_process"]["y_test_path"]
     random_state = config["base"]["random_state"]
     model_dir = config["model_dir"]
+    webapp_path = config["webapp_model_dir"]
 
     # alpha = config["estimators"]["ElasticNet"]["params"]["alpha"]
     # l1_ratio = config["estimators"]["ElasticNet"]["params"]["l1_ratio"]
@@ -56,9 +57,9 @@ def train_and_eval(config_path):
     lr = LogisticRegression(verbose=verbose, solver=solver)
     # lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=random_state)
     lr.fit(train_x, train_y)
-    webapp_path = config["webapp_model_dir"]
+    
 
-    pickle.dump(lr, open(webapp_path, "wb"))
+    
     predicted_qualities = lr.predict(test_x)
 
     scores_file = config["reports"]["scores"]
@@ -78,6 +79,7 @@ def train_and_eval(config_path):
     os.makedirs(model_dir, exist_ok=True)
     model_path = os.path.join(model_dir, "model.joblib")
     joblib.dump(lr, model_path)
+    joblib.dump(lr, webapp_path)
 
 
 if __name__ == "__main__":

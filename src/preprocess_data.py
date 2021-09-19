@@ -6,28 +6,33 @@ from get_data import read_params, get_data, get_config
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import pandas as pd
+import joblib
 
 
 def preprocess(config_path):
     print(config_path)
     config = read_params(config_path)
+    scalar_path = config["webapp_scalar_dir"]
     raw_data_path = config["load_data"]["raw_dataset_csv"]
-    x_train_path = config["pre_proccess"]["x_train_path"]
-    y_train_path = config["pre_proccess"]["y_train_path"]
-    x_test_path = config["pre_proccess"]["x_test_path"]
-    y_test_path = config["pre_proccess"]["y_test_path"]
-    split_ratio = config["pre_proccess"]["test_size"]
+    x_train_path = config["pre_process"]["x_train_path"]
+    y_train_path = config["pre_process"]["y_train_path"]
+    x_test_path = config["pre_process"]["x_test_path"]
+    y_test_path = config["pre_process"]["y_test_path"]
+    split_ratio = config["pre_process"]["test_size"]
     random_state = config["base"]["random_state"]
     label = config["base"]["label"]
 
     data = pd.read_csv(raw_data_path)
 
     scalar = StandardScaler()
+
     # drop the columns specified and separate the feature columns
     X = data.drop(columns=label)
     X = replace_zeros_mean(X)  # replace zeros with mean values
     Y = data[label]
     X_scaled = scalar.fit_transform(X)
+
+    joblib.dump(scalar, scalar_path)
 
     x_train, x_test, y_train, y_test = split_data(
         X_scaled, Y, split_ratio, random_state)
