@@ -35,26 +35,54 @@ stages:
   train_and_evaluate:
     cmd: python src/train_and_evaluate.py --config=params.yaml
     deps:
-    - path: data/processed/test_diabetes.csv
-      md5: 5aaa75439a81b8e5e974a569daba13a2
-      size: 4873
-    - path: data/processed/train_diabetes.csv
-      md5: d7b2c68a46e9e89f7ae9e5deeaf89fab
-      size: 19284
+    - path: data/processed/x_test.csv
+      md5: 80b9df5480050123a37bb8a8831ff0c1
+      size: 24356
+    - path: data/processed/x_train.csv
+      md5: ac15a1c0410271df382145142cae4d07
+      size: 97415
+    - path: data/processed/y_test.csv
+      md5: d35260d02340072558e52b75b690b023
+      size: 471
+    - path: data/processed/y_train.csv
+      md5: 4e9ef37f3b58c1ac1b370ac470368dac
+      size: 1851
     - path: src/train_and_evaluate.py
-      md5: 5a56345991543e41236a0a178784610d
-      size: 2190
+      md5: 17a2636b5ed3f1d463fb24d958f9fa6c
+      size: 2813
     params:
       params.yaml:
-        estimators.ElasticNet.params.alpha: 0.9
-        estimators.ElasticNet.params.l1_ratio: 0.4
+        estimators.Logistic.params.solver: saga
+        estimators.Logistic.params.verbose: 1
     outs:
     - path: reports/params.json
-      md5: a4aab0167612f21a6085dd05cfafdbf6
-      size: 44
+      md5: 97b70bdc0b191df1e1f9da459984c48b
+      size: 45
     - path: reports/scores.json
-      md5: a4c1ca996c3b7d54c7b34f924f746132
-      size: 101
+      md5: a86d48edbe7fe935f5ef6983559a921b
+      size: 182
     - path: saved_models/model.joblib
-      md5: f7b7254db5a64e6a5ce8e216503f5fdb
-      size: 706
+      md5: 04b021cf9f93821a32d59d6098031ee4
+      size: 959
+  process_data:
+    cmd: python src/preprocess_data.py --config=params.yaml
+    deps:
+    - path: data/raw/diabetes.csv
+      md5: 60acca81995dc9744b499005ecfe6f2a
+      size: 24059
+    - path: src/preprocess_data.py
+      md5: d2d8878dfd901faa63a472dc1f7837d1
+      size: 2168
+    outs:
+    - path: data/processed/x_test.csv
+      md5: 80b9df5480050123a37bb8a8831ff0c1
+      size: 24356
+    - path: data/processed/x_train.csv
+      md5: ac15a1c0410271df382145142cae4d07
+      size: 97415
+    - path: data/processed/y_test.csv
+      md5: d35260d02340072558e52b75b690b023
+      size: 471
+    - path: data/processed/y_train.csv
+      md5: 4e9ef37f3b58c1ac1b370ac470368dac
+      size: 1851

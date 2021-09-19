@@ -9,61 +9,69 @@ import os
 import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.linear_model import ElasticNet
+from sklearn.linear_model import ElasticNet, LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix, roc_curve, roc_auc_score
 from urllib.parse import urlparse
 from get_data import read_params, get_config
 import joblib
 import json
+import pickle
 
 
 def eval_metrics(actual, pred):
-    rmse = np.sqrt(mean_squared_error(actual, pred))
-    mae = mean_absolute_error(actual, pred)
-    r2 = r2_score(actual, pred)
-    return rmse, mae, r2
+    tn, fp, fn, tp = confusion_matrix(actual, pred).ravel()
+    accuracy = (tp+tn)/(tp+tn+fp+fn)
+    precision = tp/(tp+fp)
+    recall = tp/(tp+fn)
+    specificity = tn/(fp+tn)
+    F1_Score = 2*(recall * precision) / (recall + precision)
+    result = {"Accuracy": accuracy, "Precision": precision,
+              "Recall": recall, 'Specficity': specificity, 'F1': F1_Score}
+    return result
 
 
 def train_and_eval(config_path):
     config = read_params(config_path)
-    train_data_path = config["split_data"]["train_path"]
-    test_data_path = config["split_data"]["train_path"]
+    x_train_path = config["pre_proccess"]["x_train_path"]
+    y_train_path = config["pre_proccess"]["y_train_path"]
+    x_test_path = config["pre_proccess"]["x_test_path"]
+    y_test_path = config["pre_proccess"]["y_test_path"]
     random_state = config["base"]["random_state"]
     model_dir = config["model_dir"]
 
-    alpha = config["estimators"]["ElasticNet"]["params"]["alpha"]
-    l1_ratio = config["estimators"]["ElasticNet"]["params"]["l1_ratio"]
+    # alpha = config["estimators"]["ElasticNet"]["params"]["alpha"]
+    # l1_ratio = config["estimators"]["ElasticNet"]["params"]["l1_ratio"]
 
-    target = [config["base"]["target_col"]]
+    solver = config["estimators"]["Logistic"]["params"]["solver"]
+    verbose = config["estimators"]["Logistic"]["params"]["verbose"]
 
-    train = pd.read_csv(train_data_path, sep=",")
-    test = pd.read_csv(test_data_path, sep=",")
+    target = [config["base"]["label"]]
 
-    train_y = train[target]
-    test_y = test[target]
+    train_y = pd.read_csv(y_train_path, sep=",")
+    test_y = pd.read_csv(y_test_path, sep=",")
 
-    train_x = train.drop(target, axis=1)
-    test_x = test.drop(target, axis=1)
+    train_x = pd.read_csv(x_train_path, sep=",")
+    test_x = pd.read_csv(x_test_path, sep=",")
 
-    lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=random_state)
-    lr.fit(test_x, train_y)
+    lr = LogisticRegression(verbose=verbose, solver=solver)
+    # lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=random_state)
+    lr.fit(train_x, train_y)
+    webapp_path = config["webapp_model_dir"]
+
+    pickle.dump(lr, open(webapp_path, "wb"))
     predicted_qualities = lr.predict(test_x)
-    (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)
 
     scores_file = config["reports"]["scores"]
     params_file = config["reports"]["params"]
 
     with open(scores_file, "w") as f:
-        scores = {
-            "rmse": rmse,
-            "mae": mae,
-            "r2": r2
-        }
+        scores = eval_metrics(test_y, predicted_qualities)
         json.dump(scores, f, indent=4)
 
     with open(params_file, "w") as f:
         params = {
-            "alpha": alpha,
-            "l1_ratio": l1_ratio
+            "solver": solver,
+            "verbose": verbose
         }
         json.dump(params, f, indent=4)
 

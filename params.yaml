@@ -1,7 +1,7 @@
 base:
   project: diabetes-project
   random_state: 42
-  target_col: Outcome
+  label: Outcome
 
 data_source: 
   s3_source: data_given/diabetes.csv
@@ -9,18 +9,25 @@ data_source:
 load_data:
   raw_dataset_csv: data/raw/diabetes.csv
 
-split_data:
-  train_path: data/processed/train_diabetes.csv
-  test_path: data/processed/test_diabetes.csv
+pre_proccess:
+  x_train_path: data/processed/x_train.csv  
+  y_train_path: data/processed/y_train.csv
+  x_test_path: data/processed/x_test.csv
+  y_test_path: data/processed/y_test.csv  
   test_size: 0.2
+
 
 estimators:
   ElasticNet: 
     params: 
-      # alpha: 0.88
-      # l1_ratio: 0.89
-      alpha: 0.9
-      l1_ratio: 0.4
+      alpha: 0.88
+      l1_ratio: 0.89
+      # alpha: 0.9
+      # l1_ratio: 0.4
+  Logistic:
+    params:
+      solver: saga
+      verbose: 1    
 
 model_dir: saved_models
 
@@ -28,5 +35,7 @@ reports:
   params: reports/params.json
   scores: reports/scores.json
 
+webapp_model_dir: prediction_service/model/Diabetes.pkl
+  
 
 
